@@ -8,22 +8,29 @@ function App() {
     const [lowercase, setLowercase] = useState(true);
 
     const [numbers, setNumbers] = useState(false);
-    const [specialChars, setSpecialChars] = useState(false);
+    const [special, setSpecial] = useState(false);
 
     const [password, setPassword] = useState("");
+    const [isCopied, setIsCopied] = useState(false);
+
 
     // useRef Hook
     const passwordRef = useRef(null);
+
+    const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+    const numberChars = "0123456789";
+    const specialChars = "!@#$%^&*_";
 
     const passwordGenerator = useCallback(() => {
         let pass = "";
         let str = "";
 
-        if (uppercase) str += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        if (lowercase) str += "abcdefghijklmnopqrstuvwxyz"
+        if (uppercase) str += uppercaseChars;
+        if (lowercase) str += lowercaseChars
 
-        if (numbers) str += "0123456789";
-        if (specialChars) str += "!@#$%^&*_";
+        if (numbers) str += numberChars;
+        if (special) str += specialChars;
 
         for (let i = 1; i <= length; i++) {
             let randomIndex = Math.floor(Math.random() * str.length + 1);
@@ -33,33 +40,37 @@ function App() {
 
         console.log(pass)
         setPassword(pass);
-    }, [length, uppercase, lowercase, numbers, specialChars]);
+    }, [length, uppercase, lowercase, numbers, special]);
 
     useEffect(() => {
-        if (!(uppercase || lowercase || numbers || specialChars)) {
+        setIsCopied(false)
+        if (!(uppercase || lowercase || numbers || special)) {
             setLowercase(true);
         }
-        
+
         passwordGenerator();
-    }, [length, uppercase, lowercase, numbers, specialChars])
+    }, [length, uppercase, lowercase, numbers, special])
 
 
     const copyPasswordToClipBoard = () => {
-        passwordRef.current?.select();
+        // passwordRef.current?.select();
         window.navigator.clipboard.writeText(password);
+
+        setIsCopied(true)
         console.log(password, "copied!")
     }
 
     return (
-        <div className='bg-black text-white w-full h-screen flex flex-row justify-center'>
+        <div className='bg-[#151823] text-white w-full h-screen flex flex-row justify-center'>
 
-            <div className="bg-slate-800 w-full max-w-xl text-center">
+            <div className="w-full max-w-xl text-center">
                 <h1 className='text-2xl font-medium'>Password Generator</h1>
 
 
-                <div className="bg-slate-700">
+                <div className="mt-6 flex flex-row px-4">
                     <input
-                        className='text-black border-none outline-none py-1 px-2'
+                        id="password"
+                        className='text-white bg-[#090c16] border-none outline-none py-2 px-4 w-full rounded-l-lg'
                         type="text"
                         placeholder='Password'
                         value={password}
@@ -68,63 +79,100 @@ function App() {
                     />
 
                     <button
-                        className="text"
+                        className="bg-[#2d59a0] w-20 rounded-r-lg"
                         onClick={copyPasswordToClipBoard}
-                    >Copy</button>
+                    >{isCopied ? "Copied!" : "Copy"}</button>
                 </div>
 
-                <div className="">
-                    <div className="">
-                        <label className=""> {length} </label>
-                        <input
-                            type="range"
-                            min={4}
-                            max={24}
-                            value={length}
-                            className='cursor-pointer'
-                            onChange={(e) => setLength(e.target.value)}
-                        />
+                <div className="mt-2">
+                    <div className="flex flex-row items-center justify-between py-4 px-4 border-b-2 border-[#3d4b65]">
+                        <div>Length</div>
+                        <label htmlFor="uppercaseInput" className="flex flex-row items-center">
+                            <span className="pr-2 text-sm text-gray-400"> {length} </span>
+                            <input
+                                id="rangeInput"
+                                type="range"
+                                min={4}
+                                max={50}
+                                value={length}
+                                className='cursor-pointer'
+                                onChange={(e) => setLength(e.target.value)}
+                            />
+                        </label>
                     </div>
 
-                    <div className="">
-                        <label htmlFor="uppercaseInput">Uppercase</label>
-                        <input
-                            type="checkbox"
-                            checked={uppercase}
-                            id="uppercaseInput"
-                            onChange={() => setUppercase((prev) => !prev)}
-                        />
+                    <div className="flex flex-row items-center justify-between py-4 px-4 border-b-2 border-[#3d4b65]">
+                        <div>A-Z</div>
+                        <label htmlFor="uppercaseInput" className="flex flex-row items-center">
+                            <span className="pr-2 text-sm text-gray-400">Uppercase (A to Z)</span>
+                            <div className="toggleSwitch">
+                                <input
+                                    className="checkboxInput"
+                                    type="checkbox"
+                                    checked={uppercase}
+                                    id="uppercaseInput"
+                                    onChange={() => setUppercase((prev) => !prev)}
+                                />
+                                <span className="slider"></span>
+                            </div>
+                        </label>
                     </div>
 
-                    <div className="">
-                        <label htmlFor="lowercaseInput">Lowercase</label>
-                        <input
-                            type="checkbox"
-                            checked={lowercase}
-                            id="lowercaseInput"
-                            onChange={() => setLowercase((prev) => !prev)}
-                        />
+                    <div className="flex flex-row items-center justify-between py-4 px-4 border-b-2 border-[#3d4b65]">
+                        <div>a-z</div>
+                        <label htmlFor="lowercaseInput" className="flex flex-row items-center">
+                            <span className="pr-2 text-sm text-gray-400">Lowercase (a to z)</span>
+                            <div className="toggleSwitch">
+                                <input
+                                    className="checkboxInput"
+                                    type="checkbox"
+                                    checked={lowercase}
+                                    id="lowercaseInput"
+                                    onChange={() => setLowercase((prev) => !prev)}
+                                />
+                                <span className="slider"></span>
+                            </div>
+                        </label>
                     </div>
 
-                    <div className="">
-                        <label htmlFor="numbersInput">Numbers</label>
-                        <input
-                            type="checkbox"
-                            checked={numbers}
-                            id="numbersInput"
-                            onChange={() => setNumbers((prev) => !prev)}
-                        />
+
+                    <div className="flex flex-row items-center justify-between py-4 px-4 border-b-2 border-[#3d4b65]">
+                        <div>0-9</div>
+                        <label htmlFor="numbersInput" className="flex flex-row items-center">
+                            <span className="pr-2 text-sm text-gray-400">Numbers (1 to 9)</span>
+                            <div className="toggleSwitch">
+                                <input
+                                    className="checkboxInput"
+                                    type="checkbox"
+                                    checked={numbers}
+                                    id="numbersInput"
+                                    onChange={() => setNumbers((prev) => !prev)}
+
+                                />
+                                <span className="slider"></span>
+                            </div>
+                        </label>
                     </div>
 
-                    <div className="">
-                        <label htmlFor="specialCharsInput">!@#$%^&*_</label>
-                        <input
-                            type="checkbox"
-                            checked={specialChars}
-                            id="specialCharsInput"
-                            onChange={() => setSpecialChars((prev) => !prev)}
-                        />
+
+                    <div className="flex flex-row items-center justify-between py-4 px-4 border-b-2 border-[#3d4b65]">
+                        <div>{specialChars}</div>
+                        <label htmlFor="specialInput" className="flex flex-row items-center">
+                            <span className="pr-2 text-sm text-gray-400">Special characters</span>
+                            <div className="toggleSwitch">
+                                <input
+                                    className="checkboxInput"
+                                    type="checkbox"
+                                    checked={special}
+                                    id="specialInput"
+                                    onChange={() => setSpecial((prev) => !prev)}
+                                />
+                                <span className="slider"></span>
+                            </div>
+                        </label>
                     </div>
+
+
                 </div>
             </div>
 
