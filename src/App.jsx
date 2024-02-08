@@ -44,9 +44,9 @@ function App() {
     }, [length, uppercase, lowercase, numbers, special]);
 
     useEffect(() => {
-        if (!(uppercase || lowercase || numbers || special)) {
-            setLowercase(true);
-        }
+        // if (!(uppercase || lowercase || numbers || special)) {
+        //     setLowercase(true);
+        // }
 
         passwordGenerator();
     }, [length, uppercase, lowercase, numbers, special])
@@ -91,7 +91,7 @@ function App() {
                         className="bg-[#3555a8] w-20 rounded-r-lg hover:bg-[#4c6fc1] transition-all"
                         onClick={copyPasswordToClipBoard}
                     >
-                        {isCopied ? "Copied!" : "Copy"}
+                        {isCopied ? "Copied" : "Copy"}
                     </button>
 
                 </div>
