@@ -40,10 +40,10 @@ function App() {
 
         console.log(pass)
         setPassword(pass);
+        setIsCopied(false);
     }, [length, uppercase, lowercase, numbers, special]);
 
     useEffect(() => {
-        setIsCopied(false)
         if (!(uppercase || lowercase || numbers || special)) {
             setLowercase(true);
         }
@@ -64,7 +64,7 @@ function App() {
         <div className='bg-[#151823] text-white w-full h-screen flex flex-row justify-center'>
 
             <div className="w-full max-w-xl text-center">
-                <h1 className='text-2xl font-medium'>Password Generator</h1>
+                <h1 className='text-2xl font-medium mt-2'>Password Generator</h1>
 
 
                 <div className="mt-6 flex flex-row px-4">
@@ -77,11 +77,23 @@ function App() {
                         readOnly
                         ref={passwordRef}
                     />
+                    
+                    <button
+                        className="p-3 bg-[#283d72] hover:bg-[#4c6fc1] transition-all"
+                        onClick={passwordGenerator}
+                    >
+                        <svg width="1em" height="1em" viewBox="0 0 16 16">
+                            <path fill="currentColor" fill-rule="evenodd" d="M7.32.029a8 8 0 0 1 7.18 3.307V1.75a.75.75 0 0 1 1.5 0V6h-4.25a.75.75 0 0 1 0-1.5h1.727A6.5 6.5 0 0 0 1.694 6.424A.75.75 0 1 1 .239 6.06A8 8 0 0 1 7.319.03Zm-3.4 14.852A8 8 0 0 0 15.76 9.94a.75.75 0 0 0-1.455-.364A6.5 6.5 0 0 1 2.523 11.5H4.25a.75.75 0 0 0 0-1.5H0v4.25a.75.75 0 0 0 1.5 0v-1.586a8 8 0 0 0 2.42 2.217" clip-rule="evenodd" />
+                        </svg>
+                    </button>
 
                     <button
-                        className="bg-[#2d59a0] w-20 rounded-r-lg"
+                        className="bg-[#3555a8] w-20 rounded-r-lg hover:bg-[#4c6fc1] transition-all"
                         onClick={copyPasswordToClipBoard}
-                    >{isCopied ? "Copied!" : "Copy"}</button>
+                    >
+                        {isCopied ? "Copied!" : "Copy"}
+                    </button>
+
                 </div>
 
                 <div className="mt-2">
